@@ -3,11 +3,11 @@ package com.example.evento.services;
 import com.example.evento.domain.Evento;
 import com.example.evento.dto.EventoRequestDTO;
 import com.example.evento.dto.EventoResponseDTO;
-import com.example.evento.mapper.EventoMapper;
 import com.example.evento.repository.EventoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -15,34 +15,40 @@ import java.util.List;
 public class EventoService {
 
     private final EventoRepository eventoRepository;
-    private final EventoMapper eventoMapper;
 
     public EventoResponseDTO cadastrar(EventoRequestDTO eventoRequestDTO) {
-        Evento evento = eventoMapper.toEntity(eventoRequestDTO);
+        Evento evento = new Evento();
+
+        evento.setNome(eventoRequestDTO.nome());
+        evento.setDescricao(eventoRequestDTO.descricao());
+        evento.setLocal(eventoRequestDTO.local());
+        evento.setData(eventoRequestDTO.data());
+        evento.setPreco(eventoRequestDTO.preco());
 
         evento = eventoRepository.save(evento);
 
-        return eventoMapper.toDTO(evento);
+        return converterParaDTO(evento);
     }
 
-    public EventoResponseDTO buscarPorId(Long id) throws Exception {
+    public EventoResponseDTO buscarPorId(Long id) {
         Evento evento = buscarEventoPorId(id);
-
-        return eventoMapper.toDTO(evento);
+        return converterParaDTO(evento);
     }
 
     public List<EventoResponseDTO> buscarTodos() {
         List<Evento> eventos = eventoRepository.findAll();
 
-        return eventos.stream().map(eventoMapper::toDTO).toList();
+        return eventos.stream()
+                .map(this::converterParaDTO)
+                .toList();
     }
 
-    public void apagar(Long id) throws Exception {
-        Evento produto = buscarEventoPorId(id);
-        eventoRepository.delete(produto);
+    public void apagar(Long id) {
+        Evento evento = buscarEventoPorId(id);
+        eventoRepository.delete(evento);
     }
 
-    public EventoResponseDTO editar(Long id, EventoRequestDTO eventoRequestDTO) throws Exception {
+    public EventoResponseDTO editar(Long id, EventoRequestDTO eventoRequestDTO) {
         Evento evento = buscarEventoPorId(id);
 
         evento.setNome(eventoRequestDTO.nome());
@@ -53,12 +59,28 @@ public class EventoService {
 
         evento = eventoRepository.save(evento);
 
-        return eventoMapper.toDTO(evento);
+        return converterParaDTO(evento);
     }
 
-    private Evento buscarEventoPorId(Long id) throws Exception {
+    private Evento buscarEventoPorId(Long id) {
         return eventoRepository.findById(id)
-                .orElseThrow(() -> new Exception("Evento não encontrado com id " + id));
+                .orElseThrow(() ->
+                        new RuntimeException("Evento não encontrado com id " + id));
     }
 
+    private EventoResponseDTO converterParaDTO(Evento evento) {
+
+        boolean gratuito =
+                evento.getPreco().compareTo(BigDecimal.ZERO) == 0;
+
+        return new EventoResponseDTO(
+                evento.getId(),
+                evento.getNome(),
+                evento.getDescricao(),
+                evento.getLocal(),
+                evento.getData(),
+                evento.getPreco(),
+                gratuito
+        );
+    }
 }
