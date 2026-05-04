@@ -1,9 +1,9 @@
-package com.example.inscricao.client.dto;
+package com.example.inscricao.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public record EventoResponseDTO(
+public record EventoResponse(
         Long id,
         String nome,
         String descricao,

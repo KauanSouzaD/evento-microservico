@@ -2,7 +2,7 @@ package com.example.inscricao.dto;
 
 import java.time.LocalDateTime;
 
-public record InscricaoResponseDTO(
+public record InscricaoResponse(
         Long id,
         Long eventoId,
         String nomeEvento,

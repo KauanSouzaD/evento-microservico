@@ -1,7 +1,7 @@
 package com.example.inscricao.mapper;
 
 import com.example.inscricao.domain.Inscricao;
-import com.example.inscricao.dto.InscricaoResponseDTO;
+import com.example.inscricao.dto.InscricaoResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -14,5 +14,5 @@ public interface InscricaoMapper {
     @Mapping(target = "nomeParticipante", source = "inscricao.nomeParticipante")
     @Mapping(target = "email", source = "inscricao.email")
     @Mapping(target = "dataInscricao", source = "inscricao.dataInscricao")
-    InscricaoResponseDTO toDTO(Inscricao inscricao, String nomeEvento);
+    InscricaoResponse toDTO(Inscricao inscricao, String nomeEvento);
 }

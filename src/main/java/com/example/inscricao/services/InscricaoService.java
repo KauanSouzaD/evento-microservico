@@ -1,10 +1,11 @@
 package com.example.inscricao.services;
 
-import com.example.inscricao.client.EventoClient;
-import com.example.inscricao.client.dto.EventoResponseDTO;
+import com.example.inscricao.controller.EventoClient;
 import com.example.inscricao.domain.Inscricao;
-import com.example.inscricao.dto.InscricaoRequestDTO;
-import com.example.inscricao.dto.InscricaoResponseDTO;
+import com.example.inscricao.dto.EventoResponse;
+import com.example.inscricao.dto.InscricaoRequest;
+import com.example.inscricao.dto.InscricaoResponse;
+import com.example.inscricao.exception.RecursoNaoEncontradoException;
 import com.example.inscricao.mapper.InscricaoMapper;
 import com.example.inscricao.repository.InscricaoRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,17 +18,19 @@ import java.util.List;
 @RequiredArgsConstructor
 public class InscricaoService {
 
+    private static final String INSCRICAO_NAO_ENCONTRADA = "Inscrição não encontrada!";
+
     private final InscricaoRepository inscricaoRepository;
     private final InscricaoMapper inscricaoMapper;
     private final EventoClient eventoClient;
 
-    public InscricaoResponseDTO inscrever(InscricaoRequestDTO dto) {
-        EventoResponseDTO evento = eventoClient.buscarPorId(dto.eventoId());
+    public InscricaoResponse inscrever(InscricaoRequest request) {
+        EventoResponse evento = eventoClient.buscarPorId(request.eventoId());
 
         Inscricao inscricao = Inscricao.builder()
-                .eventoId(dto.eventoId())
-                .nomeParticipante(dto.nomeParticipante())
-                .email(dto.email())
+                .eventoId(request.eventoId())
+                .nomeParticipante(request.nomeParticipante())
+                .email(request.email())
                 .dataInscricao(LocalDateTime.now())
                 .build();
 
@@ -36,38 +39,38 @@ public class InscricaoService {
         return inscricaoMapper.toDTO(inscricao, evento.nome());
     }
 
-    public InscricaoResponseDTO buscarPorId(Long id) throws Exception {
-        Inscricao inscricao = buscarInscricaoPorId(id);
+    public InscricaoResponse buscarPorId(Long id) {
+        Inscricao inscricao = inscricaoRepository.findById(id)
+                .orElseThrow(() -> new RecursoNaoEncontradoException(INSCRICAO_NAO_ENCONTRADA));
 
-        EventoResponseDTO evento = eventoClient.buscarPorId(inscricao.getEventoId());
+        EventoResponse evento = eventoClient.buscarPorId(inscricao.getEventoId());
 
         return inscricaoMapper.toDTO(inscricao, evento.nome());
     }
 
-    public List<InscricaoResponseDTO> buscarTodas() {
-        return inscricaoRepository.findAll().stream()
+    public List<InscricaoResponse> buscarTodos() {
+        List<Inscricao> inscricoes = inscricaoRepository.findAll();
+
+        return inscricoes.stream()
                 .map(inscricao -> {
-                    EventoResponseDTO evento = eventoClient.buscarPorId(inscricao.getEventoId());
+                    EventoResponse evento = eventoClient.buscarPorId(inscricao.getEventoId());
                     return inscricaoMapper.toDTO(inscricao, evento.nome());
                 })
                 .toList();
     }
 
-    public List<InscricaoResponseDTO> buscarPorEvento(Long eventoId) {
-        EventoResponseDTO evento = eventoClient.buscarPorId(eventoId);
+    public List<InscricaoResponse> buscarPorEvento(Long eventoId) {
+        EventoResponse evento = eventoClient.buscarPorId(eventoId);
 
         return inscricaoRepository.findByEventoId(eventoId).stream()
                 .map(inscricao -> inscricaoMapper.toDTO(inscricao, evento.nome()))
                 .toList();
     }
 
-    public void cancelar(Long id) throws Exception {
-        Inscricao inscricao = buscarInscricaoPorId(id);
-        inscricaoRepository.delete(inscricao);
-    }
+    public void cancelar(Long id) {
+        Inscricao inscricao = inscricaoRepository.findById(id)
+                .orElseThrow(() -> new RecursoNaoEncontradoException(INSCRICAO_NAO_ENCONTRADA));
 
-    private Inscricao buscarInscricaoPorId(Long id) throws Exception {
-        return inscricaoRepository.findById(id)
-                .orElseThrow(() -> new Exception("Inscrição não encontrada com id " + id));
+        inscricaoRepository.delete(inscricao);
     }
 }

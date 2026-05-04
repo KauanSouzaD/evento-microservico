@@ -1,7 +1,7 @@
 package com.example.inscricao.controller;
 
-import com.example.inscricao.dto.InscricaoRequestDTO;
-import com.example.inscricao.dto.InscricaoResponseDTO;
+import com.example.inscricao.dto.InscricaoRequest;
+import com.example.inscricao.dto.InscricaoResponse;
 import com.example.inscricao.services.InscricaoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,32 +19,28 @@ public class InscricaoController {
     private final InscricaoService inscricaoService;
 
     @PostMapping
-    public ResponseEntity<InscricaoResponseDTO> inscrever(
-            @RequestBody @Valid InscricaoRequestDTO dto) {
-
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(inscricaoService.inscrever(dto));
+    public ResponseEntity<InscricaoResponse> inscrever(@RequestBody @Valid InscricaoRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(inscricaoService.inscrever(request));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<InscricaoResponseDTO> buscarPorId(@PathVariable Long id) throws Exception {
+    public ResponseEntity<InscricaoResponse> buscarPorId(@PathVariable Long id) {
         return ResponseEntity.ok(inscricaoService.buscarPorId(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<InscricaoResponseDTO>> buscarTodas() {
-        return ResponseEntity.ok(inscricaoService.buscarTodas());
+    public ResponseEntity<List<InscricaoResponse>> buscarTodos() {
+        return ResponseEntity.ok(inscricaoService.buscarTodos());
     }
 
     @GetMapping("/evento/{eventoId}")
-    public ResponseEntity<List<InscricaoResponseDTO>> buscarPorEvento(@PathVariable Long eventoId) {
+    public ResponseEntity<List<InscricaoResponse>> buscarPorEvento(@PathVariable Long eventoId) {
         return ResponseEntity.ok(inscricaoService.buscarPorEvento(eventoId));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> cancelar(@PathVariable Long id) throws Exception {
+    public ResponseEntity<Void> cancelar(@PathVariable Long id) {
         inscricaoService.cancelar(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
