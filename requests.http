@@ -1,0 +1,34 @@
+POST http://localhost:8080/api/v1/eventos
+Content-Type: application/json
+
+{
+  "nome": "Show",
+  "descricao": "Uma noite incrível",
+  "local": "Fortaleza",
+  "data": "2026-06-15T20:00:00",
+  "preco": 50.00
+}
+
+GET http://localhost:8080/api/v1/eventos
+
+POST http://localhost:8081/api/v1/inscricoes
+Content-Type: application/json
+
+{
+  "eventoId": 1,
+  "nomeParticipante": "João Silva",
+  "email": "joao@email.com"
+}
+
+GET http://localhost:8081/api/v1/inscricoes
+
+GET http://localhost:8081/api/v1/inscricoes/evento/1
+
+POST http://localhost:8081/api/v1/inscricoes
+Content-Type: application/json
+
+{
+  "eventoId": 999,
+  "nomeParticipante": "Maria",
+  "email": "maria@email.com"
+}

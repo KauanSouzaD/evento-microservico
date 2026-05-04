@@ -1,0 +1,14 @@
+package com.example.inscricao.client.dto;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+public record EventoResponseDTO(
+        Long id,
+        String nome,
+        String descricao,
+        String local,
+        LocalDateTime data,
+        BigDecimal preco,
+        boolean gratuito
+) {}
