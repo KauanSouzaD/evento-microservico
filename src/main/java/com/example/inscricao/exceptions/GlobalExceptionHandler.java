@@ -1,6 +1,5 @@
-package com.example.inscricao.exception;
+package com.example.inscricao.exceptions;
 
-import com.example.inscricao.exceptions.RecursoNaoEncontradoException;
 import feign.FeignException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;

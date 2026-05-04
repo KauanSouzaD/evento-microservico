@@ -5,7 +5,7 @@ import com.example.inscricao.domain.Inscricao;
 import com.example.inscricao.dto.EventoResponse;
 import com.example.inscricao.dto.InscricaoRequest;
 import com.example.inscricao.dto.InscricaoResponse;
-import com.example.inscricao.exception.RecursoNaoEncontradoException;
+import com.example.inscricao.exceptions.RecursoNaoEncontradoException;
 import com.example.inscricao.mapper.InscricaoMapper;
 import com.example.inscricao.repository.InscricaoRepository;
 import lombok.RequiredArgsConstructor;
