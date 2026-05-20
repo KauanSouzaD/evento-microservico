@@ -1,4 +1,4 @@
-package com.example.inscricao.exceptions;
+package com.example.evento.exceptions;
 
 public class RecursoNaoEncontradoException extends RuntimeException {
     public RecursoNaoEncontradoException(String message) {

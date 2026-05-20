@@ -1,6 +1,7 @@
 package com.example.evento.services;
 
 import com.example.evento.domain.Evento;
+import com.example.evento.exceptions.RecursoNaoEncontradoException;
 import com.example.evento.dto.EventoRequestDTO;
 import com.example.evento.dto.EventoResponseDTO;
 import com.example.evento.repository.EventoRepository;
@@ -65,7 +66,7 @@ public class EventoService {
     private Evento buscarEventoPorId(Long id) {
         return eventoRepository.findById(id)
                 .orElseThrow(() ->
-                        new RecursoNaoEncontrado("Evento não encontrado com id " + id));
+                        new RecursoNaoEncontradoException("Evento não encontrado com id " + id));
     }
 
     private EventoResponseDTO converterParaDTO(Evento evento) {

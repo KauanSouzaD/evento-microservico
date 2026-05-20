@@ -1,4 +1,4 @@
-package com.example.inscricao.exceptions;
+package com.example.evento.exceptions;
 
 import feign.FeignException;
 import jakarta.validation.ConstraintViolationException;
