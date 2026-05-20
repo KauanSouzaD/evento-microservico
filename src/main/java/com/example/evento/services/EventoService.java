@@ -65,7 +65,7 @@ public class EventoService {
     private Evento buscarEventoPorId(Long id) {
         return eventoRepository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Evento não encontrado com id " + id));
+                        new RecursoNaoEncontrado("Evento não encontrado com id " + id));
     }
 
     private EventoResponseDTO converterParaDTO(Evento evento) {

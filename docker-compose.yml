@@ -7,7 +7,7 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: produtos
     ports:
-      - 5433:5432
+      - 5433:5431
     shm_size: 128mb
     restart: always
     volumes:
