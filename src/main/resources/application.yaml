@@ -9,14 +9,14 @@ spring:
       server:
         webflux:
           routes:
-            - id: ms-produto
-              uri: http://localhost:8081
-              predicates:
-                - Path=/api/v1/produtos/**
-            - id: ms-pedido
+            - id: ms-evento
               uri: http://localhost:8082
               predicates:
-                - Path=/api/v1/pedidos/**
+                - Path=/api/v1/eventos/**
+            - id: ms-inscricao
+              uri: http://localhost:8081
+              predicates:
+                - Path=/api/v1/incricoes/**
 eureka:
   client:
     service-url:
