@@ -11,5 +11,4 @@ public class InscricaoApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(InscricaoApplication.class, args);
 	}
-
 }
