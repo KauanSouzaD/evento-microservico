@@ -1,5 +1,6 @@
 package com.example.inscricao.services;
 
+import com.example.inscricao.config.RabbitMQConfig;
 import com.example.inscricao.controller.EventoClient;
 import com.example.inscricao.domain.Inscricao;
 import com.example.inscricao.dto.EventoResponse;
@@ -9,6 +10,7 @@ import com.example.inscricao.exceptions.RecursoNaoEncontradoException;
 import com.example.inscricao.mapper.InscricaoMapper;
 import com.example.inscricao.repository.InscricaoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -23,6 +25,8 @@ public class InscricaoService {
     private final InscricaoRepository inscricaoRepository;
     private final InscricaoMapper inscricaoMapper;
     private final EventoClient eventoClient;
+    private final RabbitTemplate rabbitTemplate;
+
 
     public InscricaoResponse inscrever(InscricaoRequest request) {
         EventoResponse evento = eventoClient.buscarPorId(request.eventoId());
@@ -34,6 +38,7 @@ public class InscricaoService {
                 .dataInscricao(LocalDateTime.now())
                 .build();
 
+        rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE, RabbitMQConfig.ROUTING_KEY, request.email());
         inscricao = inscricaoRepository.save(inscricao);
 
         return inscricaoMapper.toDTO(inscricao, evento.nome());
