@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class InscricaoConsumer {
 
-    @RabbitListener(queues = "email.pedido.queue")
+    @RabbitListener(queues = "email.inscricao.queue")
     public void receberMensagem(String mensagem) {
 
         System.out.println("Mensagem recebida: " + mensagem);
